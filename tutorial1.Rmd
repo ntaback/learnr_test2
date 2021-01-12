@@ -1,0 +1,74 @@
+---
+title: "Tutorial"
+tutorial:
+  id: "my-first-tutorial"
+  version: 1.0
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(tidyverse)
+
+knitr::opts_chunk$set(echo = FALSE)
+
+tutorial_options(exercise.eval = TRUE)
+
+fname <- "resp.csv" # filename for responses
+
+# create column names
+cat(c("user_id", "tutorial_id", "event", 
+      "label","answer", "correct"), 
+    file = fname, sep = ",", "\n")
+
+new_recorder <- function(tutorial_id, tutorial_version, user_id, event, data) 
+  {
+
+  #print to stdio
+  label <- data$label
+  answer <- data$answer
+  correct <- data$correct
+  
+  cat("User response:", "\n")
+  cat(c(user_id, tutorial_id, event, label,answer, correct), sep = ",", "\n")
+  
+  # this could be modified to capture when user stopped and started session
+  
+  if (!is.null(event) & !is.null(correct)) {
+  cat(c(user_id, tutorial_id, event,label,answer,correct), file = fname, sep = ",", "\n",append = TRUE)
+  }
+  
+}
+
+options(tutorial.event_recorder = new_recorder)
+```
+
+
+
+## Topic 2
+
+### Quiz
+
+*You can include any number of single or multiple choice questions as a quiz. Use the `question` function to define a question and the `quiz` function for grouping multiple questions together.*
+
+Some questions to verify that you understand the purposes of various base and recommended R packages:
+
+```{r quiz}
+quiz(
+  question("Which package contains functions for installing other R packages?",
+    answer("base"),
+    answer("tools"),
+    answer("utils", correct = TRUE),
+    answer("codetools"),
+    allow_retry = TRUE
+  ),
+  question("Which of the R packages listed below are used to create plots?",
+    answer("lattice", correct = TRUE),
+    answer("tools"),
+    answer("stats"),
+    allow_retry = TRUE
+  )
+)
+```
+
